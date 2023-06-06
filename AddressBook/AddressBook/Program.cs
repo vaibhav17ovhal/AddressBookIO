@@ -39,7 +39,10 @@ namespace AddressBook
                 Console.WriteLine("4. Search person in a city or state");
                 Console.WriteLine("5. View Person by entering city or state");
                 Console.WriteLine("6. Sort contacts by name");
-                Console.WriteLine("7. Exit");
+                Console.WriteLine("7. Sort contacts by city");
+                Console.WriteLine("8. Sort contacts by state");
+                Console.WriteLine("9. Sort contacts by Zip");
+                Console.WriteLine("10. Exit");
                 Console.WriteLine("Enter your choice:");
 
                 int choice;
@@ -69,6 +72,15 @@ namespace AddressBook
                         two.SortContactsByName();
                         break;
                     case 7:
+                        two.SortContactsByName();
+                        break;
+                    case 8:
+                        two.SortContactsByName();
+                        break;
+                    case 9:
+                        two.SortContactsByName();
+                        break;
+                    case 10:
                         Console.WriteLine("Exiting...");
                         return;
                     default:

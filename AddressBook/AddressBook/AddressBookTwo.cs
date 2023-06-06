@@ -9,13 +9,7 @@ namespace AddressBook
 {
     public class AddressBookTwo
     {
-        private List<Address> addressBooks;
-
-
-        public AddressBookTwo()
-        {
-            addressBooks = new List<Address>();
-        }
+        private List<Address> addressBooks = new List<Address>();
         public void CreateAddressBook()
         {
             Console.WriteLine("Enter a unique name for the address book:");
@@ -181,6 +175,48 @@ namespace AddressBook
             allContacts.Sort();
 
             Console.WriteLine("Sorted contacts by name:");
+            Console.WriteLine("----------------------------------");
+
+            foreach (var contact in allContacts)
+            {
+                Console.WriteLine(contact);
+                Console.WriteLine("----------------------------------");
+            }
+        }
+        public void SortContactsByCity()
+        {
+            List<Contact> allContacts = addressBooks.SelectMany(ab => ab.Contacts).ToList();
+            allContacts = allContacts.OrderBy(c => c.City).ToList();
+
+            Console.WriteLine("Sorted contacts by city:");
+            Console.WriteLine("----------------------------------");
+
+            foreach (var contact in allContacts)
+            {
+                Console.WriteLine(contact);
+                Console.WriteLine("----------------------------------");
+            }
+        }
+        public void SortContactsByState()
+        {
+            List<Contact> allContacts = addressBooks.SelectMany(ab => ab.Contacts).ToList();
+            allContacts = allContacts.OrderBy(c => c.State).ToList();
+
+            Console.WriteLine("Sorted contacts by state:");
+            Console.WriteLine("----------------------------------");
+
+            foreach (var contact in allContacts)
+            {
+                Console.WriteLine(contact);
+                Console.WriteLine("----------------------------------");
+            }
+        }
+        public void SortContactsByZip()
+        {
+            List<Contact> allContacts = addressBooks.SelectMany(ab => ab.Contacts).ToList();
+            allContacts = allContacts.OrderBy(c => c.Zip).ToList();
+
+            Console.WriteLine("Sorted contacts by ZIP:");
             Console.WriteLine("----------------------------------");
 
             foreach (var contact in allContacts)
