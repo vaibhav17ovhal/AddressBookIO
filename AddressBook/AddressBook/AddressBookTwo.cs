@@ -189,7 +189,10 @@ namespace AddressBook
                     }
                 }
             }
-            if (searchResults.Count > 0)
+
+            int count = searchResults.Count;
+
+            if (count > 0)
             {
                 Console.WriteLine($"Persons in '{searchQuery}':");
                 Console.WriteLine("----------------------------------");
@@ -204,6 +207,7 @@ namespace AddressBook
                     Console.WriteLine($"Email: {contact.Email}");
                     Console.WriteLine("----------------------------------");
                 }
+                Console.WriteLine($"Total persons: {count}");
             }
             else
             {
