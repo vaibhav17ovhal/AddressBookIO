@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace AddressBook
     public class AddressBookTwo
     {
         private List<Address> addressBooks;
+        
 
         public AddressBookTwo()
         {
@@ -52,6 +54,7 @@ namespace AddressBook
                 Console.WriteLine($"Address book '{addressBookName}' not found.");
                 return;
             }
+
             Console.WriteLine("Enter contact details:");
 
             Console.Write("First Name: ");
@@ -60,6 +63,15 @@ namespace AddressBook
             Console.Write("Last Name: ");
             string lastName = Console.ReadLine();
 
+            // Check if the contact already exists in the address book
+            if (addressBook.Contacts.Exists(c => c.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
+                                                 c.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase)))
+            {
+                Console.WriteLine("Contact already exists in the address book.");
+                return;
+            }
+
+            // Rest of the input prompts for address, city, state, zip, phone number, and email
             Console.Write("Address: ");
             string address = Console.ReadLine();
 
@@ -78,6 +90,7 @@ namespace AddressBook
             Console.Write("Email: ");
             string email = Console.ReadLine();
 
+            // Add the contact to the address book
             addressBook.Contacts.Add(new Contact
             {
                 FirstName = firstName,
@@ -92,6 +105,7 @@ namespace AddressBook
 
             Console.WriteLine("Contact added successfully.");
         }
+
         public void DisplayAllContacts()
         {
             if (addressBooks.Count == 0)
