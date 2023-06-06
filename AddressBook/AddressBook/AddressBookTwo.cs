@@ -38,98 +38,59 @@ namespace AddressBook
         }
         public void AddContact()
         {
-            if (addressBooks.Count == 0)
-            {
-                Console.WriteLine("No address books found. Please create an address book first.");
-                return;
-            }
+            Console.WriteLine("Enter the address book name:");
+            string bookName = Console.ReadLine();
 
-            Console.WriteLine("Enter the name of the address book to add the contact:");
-            string addressBookName = Console.ReadLine();
-
-            Address addressBook = addressBooks.Find(ab => ab.Name.Equals(addressBookName, StringComparison.OrdinalIgnoreCase));
-
+            Address addressBook = addressBooks.FirstOrDefault(ab => ab.Name.Equals(bookName, StringComparison.OrdinalIgnoreCase));
             if (addressBook == null)
             {
-                Console.WriteLine($"Address book '{addressBookName}' not found.");
+                Console.WriteLine("Address book not found.");
                 return;
             }
 
-            Console.WriteLine("Enter contact details:");
+            Contact contact = new Contact();
 
-            Console.Write("First Name: ");
-            string firstName = Console.ReadLine();
+            Console.WriteLine("Enter the first name:");
+            contact.FirstName = Console.ReadLine();
 
-            Console.Write("Last Name: ");
-            string lastName = Console.ReadLine();
+            Console.WriteLine("Enter the last name:");
+            contact.LastName = Console.ReadLine();
 
-            // Check if the contact already exists in the address book
-            if (addressBook.Contacts.Exists(c => c.FirstName.Equals(firstName, StringComparison.OrdinalIgnoreCase) &&
-                                                 c.LastName.Equals(lastName, StringComparison.OrdinalIgnoreCase)))
-            {
-                Console.WriteLine("Contact already exists in the address book.");
-                return;
-            }
+            Console.WriteLine("Enter the address:");
+            contact.Address = Console.ReadLine();
 
-            // Rest of the input prompts for address, city, state, zip, phone number, and email
-            Console.Write("Address: ");
-            string address = Console.ReadLine();
+            Console.WriteLine("Enter the city:");
+            contact.City = Console.ReadLine();
 
-            Console.Write("City: ");
-            string city = Console.ReadLine();
+            Console.WriteLine("Enter the state:");
+            contact.State = Console.ReadLine();
 
-            Console.Write("State: ");
-            string state = Console.ReadLine();
+            Console.WriteLine("Enter the ZIP:");
+            contact.Zip = Console.ReadLine();
 
-            Console.Write("ZIP: ");
-            string zip = Console.ReadLine();
+            Console.WriteLine("Enter the phone number:");
+            contact.PhoneNumber = Console.ReadLine();
 
-            Console.Write("Phone Number: ");
-            string phoneNumber = Console.ReadLine();
+            Console.WriteLine("Enter the email:");
+            contact.Email = Console.ReadLine();
 
-            Console.Write("Email: ");
-            string email = Console.ReadLine();
-
-            // Add the contact to the address book
-            addressBook.Contacts.Add(new Contact
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                Address = address,
-                City = city,
-                State = state,
-                Zip = zip,
-                PhoneNumber = phoneNumber,
-                Email = email
-            });
+            addressBook.Contacts.Add(contact);
 
             Console.WriteLine("Contact added successfully.");
         }
 
         public void DisplayAllContacts()
         {
-            if (addressBooks.Count == 0)
-            {
-                Console.WriteLine("No address books found.");
-                return;
-            }
-
             foreach (var addressBook in addressBooks)
             {
                 Console.WriteLine($"Address Book: {addressBook.Name}");
-                Console.WriteLine("-----------------------------");
+                Console.WriteLine("----------------------------------");
+
                 foreach (var contact in addressBook.Contacts)
                 {
-                    Console.WriteLine($"Name: {contact.FirstName} {contact.LastName}");
-                    Console.WriteLine($"Address: {contact.Address}");
-                    Console.WriteLine($"City: {contact.City}");
-                    Console.WriteLine($"State: {contact.State}");
-                    Console.WriteLine($"ZIP: {contact.Zip}");
-                    Console.WriteLine($"Phone: {contact.PhoneNumber}");
-                    Console.WriteLine($"Email: {contact.Email}");
-                    Console.WriteLine("-----------------------------");
+                    Console.WriteLine(contact);
+                    Console.WriteLine("----------------------------------");
                 }
-                Console.WriteLine();
             }
         }
         public void SearchPerson()
@@ -212,6 +173,20 @@ namespace AddressBook
             else
             {
                 Console.WriteLine($"No persons found in '{searchQuery}'.");
+            }
+        }
+        public void SortContactsByName()
+        {
+            List<Contact> allContacts = addressBooks.SelectMany(ab => ab.Contacts).ToList();
+            allContacts.Sort();
+
+            Console.WriteLine("Sorted contacts by name:");
+            Console.WriteLine("----------------------------------");
+
+            foreach (var contact in allContacts)
+            {
+                Console.WriteLine(contact);
+                Console.WriteLine("----------------------------------");
             }
         }
     }
