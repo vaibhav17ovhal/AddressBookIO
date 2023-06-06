@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -225,5 +226,73 @@ namespace AddressBook
                 Console.WriteLine("----------------------------------");
             }
         }
+        public void SaveToFile(string fileName)
+        {
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                foreach (var addressBook in addressBooks)
+                {
+                    writer.WriteLine($"Address Book: {addressBook.Name}");
+                    writer.WriteLine("----------------------------------");
+
+                    foreach (var contact in addressBook.Contacts)
+                    {
+                        writer.WriteLine(contact);
+                        writer.WriteLine("----------------------------------");
+                    }
+                }
+            }
+
+            Console.WriteLine($"Address book saved to file: {fileName}");
+        }
+        public void LoadFromFile(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                Console.WriteLine($"File not found: {fileName}");
+                return;
+            }
+
+            addressBooks.Clear();
+
+            Address currentAddressBook = null;
+            Contact currentContact = null;
+
+            foreach (string line in File.ReadLines(fileName))
+            {
+                if (line.StartsWith("Address Book:"))
+                {
+                    string addressBookName = line.Substring(line.IndexOf(':') + 1).Trim();
+                    currentAddressBook = new Address(addressBookName);
+                    addressBooks.Add(currentAddressBook);
+                }
+                else if (line.StartsWith("Name:"))
+                {
+                    currentContact = new Contact();
+                    currentContact.FirstName = line.Substring(line.IndexOf(':') + 1).Trim();
+                }
+                else if (currentContact != null)
+                {
+                    if (line.StartsWith("Address:"))
+                        currentContact.Address = line.Substring(line.IndexOf(':') + 1).Trim();
+                    else if (line.StartsWith("City:"))
+                        currentContact.City = line.Substring(line.IndexOf(':') + 1).Trim();
+                    else if (line.StartsWith("State:"))
+                        currentContact.State = line.Substring(line.IndexOf(':') + 1).Trim();
+                    else if (line.StartsWith("ZIP:"))
+                        currentContact.Zip = line.Substring(line.IndexOf(':') + 1).Trim();
+                    else if (line.StartsWith("Phone:"))
+                        currentContact.PhoneNumber = line.Substring(line.IndexOf(':') + 1).Trim();
+                    else if (line.StartsWith("Email:"))
+                    {
+                        currentContact.Email = line.Substring(line.IndexOf(':') + 1).Trim();
+                        currentAddressBook.Contacts.Add(currentContact);
+                        currentContact = null;
+                    }
+                }
+            }
+            Console.WriteLine($"Address book loaded from file: {fileName}");
+        }
     }
 }
+
