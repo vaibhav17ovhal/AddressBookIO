@@ -12,6 +12,10 @@ namespace AddressBook
             book.Addcontact();
             Console.WriteLine("\n");
             book.Display();
+            Console.WriteLine("\n");
+            book.EditContact();
+            Console.WriteLine("\n");
+            book.Display();
         }
     }
 }
