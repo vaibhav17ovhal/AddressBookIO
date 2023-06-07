@@ -13,23 +13,19 @@ namespace AddressBook
         private List<Address> addressBooks = new List<Address>();
         public void CreateAddressBook()
         {
-            Console.WriteLine("Enter a unique name for the address book:");
-            string name = Console.ReadLine();
+            Console.WriteLine("Enter the name for the new address book:");
+            string bookName = Console.ReadLine();
 
-            if (string.IsNullOrWhiteSpace(name))
+            if (addressBooks.Any(ab => ab.Name.Equals(bookName, StringComparison.OrdinalIgnoreCase)))
             {
-                Console.WriteLine("Invalid name. Please try again.");
+                Console.WriteLine("An address book with the same name already exists.");
                 return;
             }
 
-            if (addressBooks.Exists(ab => ab.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
-            {
-                Console.WriteLine($"Address book '{name}' already exists.");
-                return;
-            }
+            Address addressBook = new Address(bookName);
+            addressBooks.Add(addressBook);
 
-            addressBooks.Add(new Address(name));
-            Console.WriteLine($"Address book '{name}' created successfully.");
+            Console.WriteLine("Address book created successfully.");
         }
         public void AddContact()
         {
@@ -173,7 +169,7 @@ namespace AddressBook
         public void SortContactsByName()
         {
             List<Contact> allContacts = addressBooks.SelectMany(ab => ab.Contacts).ToList();
-            allContacts.Sort();
+            allContacts.Sort((c1, c2) => string.Compare($"{c1.FirstName} {c1.LastName}", $"{c2.FirstName} {c2.LastName}", StringComparison.OrdinalIgnoreCase));
 
             Console.WriteLine("Sorted contacts by name:");
             Console.WriteLine("----------------------------------");
@@ -291,8 +287,76 @@ namespace AddressBook
                     }
                 }
             }
+
             Console.WriteLine($"Address book loaded from file: {fileName}");
+        }
+
+        public void SaveToCsv(string fileName)
+        {
+            using (StreamWriter writer = new StreamWriter(fileName))
+            {
+                foreach (var addressBook in addressBooks)
+                {
+                    writer.WriteLine($"Address Book: {addressBook.Name}");
+                    writer.WriteLine("First Name,Last Name,Address,City,State,ZIP,Phone,Email");
+
+                    foreach (var contact in addressBook.Contacts)
+                    {
+                        writer.WriteLine(contact);
+                    }
+                }
+            }
+
+            Console.WriteLine($"Address book saved as CSV file: {fileName}");
+        }
+        public void LoadFromCsv(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                Console.WriteLine($"File not found: {fileName}");
+                return;
+            }
+
+            addressBooks.Clear();
+
+            Address currentAddressBook = null;
+            bool isFirstLine = true;
+
+            foreach (string line in File.ReadLines(fileName))
+            {
+                if (line.StartsWith("Address Book:"))
+                {
+                    string addressBookName = line.Substring(line.IndexOf(':') + 1).Trim();
+                    currentAddressBook = new Address(addressBookName);
+                    addressBooks.Add(currentAddressBook);
+                }
+                else if (!isFirstLine)
+                {
+                    string[] values = line.Split(',');
+                    if (values.Length == 8)
+                    {
+                        Contact contact = new Contact
+                        {
+                            FirstName = values[0],
+                            LastName = values[1],
+                            Address = values[2],
+                            City = values[3],
+                            State = values[4],
+                            Zip = values[5],
+                            PhoneNumber = values[6],
+                            Email = values[7]
+                        };
+
+                        currentAddressBook.Contacts.Add(contact);
+                    }
+                }
+
+                isFirstLine = false;
+            }
+
+            Console.WriteLine($"Address book loaded from CSV file: {fileName}");
         }
     }
 }
+
 

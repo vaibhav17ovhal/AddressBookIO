@@ -10,11 +10,12 @@ namespace AddressBook
     public class Address
     {
         public string Name { get; set; }
-        public Collection<Contact> Contacts { get; set; } = new Collection<Contact>();
+        public List<Contact> Contacts { get; set; } = new List<Contact>();
 
         public Address(string name)
         {
             Name = name;
+            //Contacts = new List<Contact>();
         }
     }
 }
