@@ -46,7 +46,9 @@ namespace AddressBook
                 Console.WriteLine("11. Load address book from file");
                 Console.WriteLine("12. Save address book to CSV");
                 Console.WriteLine("13. Load address book from CSV");
-                Console.WriteLine("14. Exit");
+                Console.WriteLine("14. Save address book to Json");
+                Console.WriteLine("15. Load address book to Json");
+                Console.WriteLine("16. Exit");
                 Console.WriteLine("Enter your choice:");
 
                 int choice;
@@ -105,6 +107,16 @@ namespace AddressBook
                         two.LoadFromCsv(loadCSVFile);
                         break;
                     case 14:
+                        Console.WriteLine("Enter the file name to save as JSON:");
+                        string saveJsonFile = Console.ReadLine();
+                        two.SaveToJson(saveJsonFile);
+                        break;
+                    case 15:
+                        Console.WriteLine("Enter the file name to load from JSON:");
+                        string loadJsonFile = Console.ReadLine();
+                        two.LoadFromJson(loadJsonFile);
+                        break;
+                    case 16:
                         Console.WriteLine("Exiting...");
                         return;
                     default:

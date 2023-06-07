@@ -1,10 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
+using Formatting = Newtonsoft.Json.Formatting;
 
 namespace AddressBook
 {
@@ -356,6 +359,43 @@ namespace AddressBook
 
             Console.WriteLine($"Address book loaded from CSV file: {fileName}");
         }
+        public void SaveToJson(string fileName)
+        {
+            List<Address> allAddressBooks = addressBooks.ToList();
+            JsonSerializerSettings settings = new JsonSerializerSettings
+            {
+                Formatting = Formatting.None
+            };
+
+            string json = JsonConvert.SerializeObject(allAddressBooks, settings);
+            using (StreamWriter file = File.CreateText(fileName))
+            {
+                file.Write(json);
+            }
+
+            Console.WriteLine($"Address book saved as JSON file: {fileName}");
+        }
+
+
+        public void LoadFromJson(string fileName)
+        {
+            if (!File.Exists(fileName))
+            {
+                Console.WriteLine($"File not found: {fileName}");
+                return;
+            }
+
+            string json = File.ReadAllText(fileName);
+            List<Address> allAddressBooks = JsonConvert.DeserializeObject<List<Address>>(json);
+
+            if (allAddressBooks != null)
+            {
+                addressBooks = allAddressBooks;
+            }
+
+            Console.WriteLine($"Address book loaded from JSON file: {fileName}");
+        }
+
     }
 }
 
